@@ -23,6 +23,10 @@ public class FlipFlop {
         System.out.println(f.q());
         System.out.println(f.rq());
 
+        f.set();
+        System.out.println(f.q());
+        System.out.println(f.rq());
+
         f.reset();
 
         System.out.println(f.q());
