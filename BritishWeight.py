@@ -1,3 +1,7 @@
+"""
+@author David Angelo
+"""
+
 class BritishWeight:
     pass
 
@@ -30,10 +34,17 @@ class BritishWeight:
 
     @property
     def pounds(self) -> int:
+        """
+        returns how many pounds it is
+        :return:
+        """
         return self._pounds
 
     @property
     def stone_and_pounds(self) -> tuple[int,int]:
+        """
+        :return: How many stones and pounds as a tuple
+        """
         return int(self._pounds/14), self._pounds % 14
 
     def __add__(self, other:BritishWeight):
