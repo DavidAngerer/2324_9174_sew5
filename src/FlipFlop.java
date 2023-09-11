@@ -1,19 +1,37 @@
+/**
+ * Represents a FlipFlop
+ * @date 11.09.2023
+ * @author David Angelo
+ */
+
 public class FlipFlop {
     private boolean isOn = false;
 
     public void set() {
+        /**
+         * sets the state of FlipFlop to 1
+         */
         isOn = true;
     }
 
     public void reset() {
+        /**
+         * sets the state of FlipFlop to 0
+         */
         isOn = false;
     }
 
     public boolean q() {
+        /**
+         * returns state of Flipflop
+         */
         return isOn;
     }
 
     public boolean rq() {
+        /**
+         * returns inverted state of Flipflop
+         */
         return !isOn;
     }
 
