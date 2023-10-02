@@ -1,3 +1,5 @@
+import argparse
+import logging
 import random
 from pathlib import Path
 from openpyxl import load_workbook
@@ -27,7 +29,7 @@ def get_people_from_name_file(path):
         yield first_name, last_name, group, school_class
 
 
-def create_class_user(path:str):
+def create_class_user_files(path:str):
     with open("create_users.sh", 'w') as file, open("delete_users.sh", 'w') as file_delete, \
             open("userlist.txt", 'w') as user_list_file:
         file.write("#! /bin/sh\n")
@@ -40,15 +42,19 @@ def create_class_user(path:str):
             kv = str(kv)
             username = f'k{str(class_name).lower()}'
             if username in user_dict:
-                print("Error: Duplicate User")#TODO
+                logging.log(logging.ERROR, f"User duplicate: {username}. Programm is terminating!")
                 break
-            command = f"useradd -d /home/klassen/{username} -g klasse -s /bin/sh -G cdrom,plugdev,sambashare {username}\n"
+            command = f"useradd -d /home/klassen/{username} -g klasse -c \"{class_name} - {kv}\" -s /bin/bash -G cdrom,plugdev,sambashare {username}\n"
             password = f'{class_name}{get_random_pw_char()}{room[0:2]}{get_random_pw_char()}{kv}{get_random_pw_char()}'
             passwd_command = f'echo {username}:{password} | chpasswd\n'
             file.write(command)
+            logging.log(logging.DEBUG, f"User created: {username}")
             file.write(passwd_command)
+            logging.log(logging.DEBUG, f"User password created for {username}")
             file_delete.write(f'userdel -r {username}\n')
+            logging.log(logging.DEBUG, f"User deletion written for {username}")
             user_list_file.write(f'username: {username}, password: {password}\n')
+            logging.log(logging.DEBUG, f"User \"{username}\" added to list")
 
 def get_random_pw_char():
     return "!%&(),._-=^#"[random.randint(0, 11)]
@@ -65,7 +71,23 @@ def get_classes_from_class_file(path:str):
             break
         yield class_name, room, kv
 
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
 
-# create_user_from_name_file("../../res/Namen.xlsx")
-create_class_user("../../res/Klassenraeume_2023.xlsx")
+    parser.add_argument("-q", "--quiet", type=str, help='Only Log Errors', required=False)
+    parser.add_argument("-v", "--verbose", type=str, help='Log Verbose Debug', required=False)
+
+
+    args = parser.parse_args()
+    if args.verbose:
+        loglevel = "DEBUG"
+    elif args.quiet:
+        loglevel = "ERROR"
+    else:
+        loglevel = "INFO"
+    logging.basicConfig(level=getattr(logging, loglevel), format='[%(asctime)s] %(levelname)s %(message)s',
+                        datefmt='%Y-%m-%d %H:%M:%S')
+    logging.log(logging.INFO, "Logging turned on " + args.loglevel)
+    # create_user_from_name_file("../../res/Namen.xlsx")
+    create_class_user_files("../../res/Klassenraeume_2023.xlsx")
 
