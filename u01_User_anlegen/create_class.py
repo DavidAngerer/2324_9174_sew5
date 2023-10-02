@@ -27,10 +27,10 @@ def get_people_from_name_file(path):
         yield first_name, last_name, group, school_class
 
 
-def create_class_user(path:str,script_file_name:str):
-    if not script_file_name.endswith(".sh"): script_file_name = script_file_name + ".sh"
-    with open(script_file_name, 'w') as file:
+def create_class_user(path:str):
+    with open("create_users.sh", 'w') as file, open("delete_users.sh") as file_delete, open("userlist"):
         file.write("#! /bin/sh\n")
+        file_delete.write("#! /bin/sh\n")
         file.write("groupadd klasse\n")
         user_dict = dict()
         for class_name, room, kv in get_classes_from_class_file(path):
@@ -41,11 +41,12 @@ def create_class_user(path:str,script_file_name:str):
             room = str(room)
             kv = str(kv)
             username = f'k{str(class_name).lower()}'
-            command = f"useradd -d /home/klassen/{username} -g klasse -G cdrom,plugdev,sambashare {username}\n"
+            command = f"useradd -d /home/klassen/{username} -g klasse -s /bin/sh -G cdrom,plugdev,sambashare {username}\n"
             password = f'{class_name}{get_random_pw_char()}{room[0:2]}{get_random_pw_char()}{kv}{get_random_pw_char()}'
             passwd_command = f'echo {username}:{password} | chpasswd\n'
             file.write(command)
             file.write(passwd_command)
+            file_delete.write(f'userdel -r {username}')
 
 def get_random_pw_char():
     return "!%&(),._-=^#"[random.randint(0, 11)]
@@ -64,5 +65,5 @@ def get_classes_from_class_file(path:str):
 
 
 # create_user_from_name_file("../../res/Namen.xlsx")
-create_class_user("../../res/Klassenraeume_2023.xlsx", "script_test")
+create_class_user("../../res/Klassenraeume_2023.xlsx")
 
