@@ -1,34 +1,12 @@
 import argparse
 import random
 from pathlib import Path
+
+import unicodedata
 from openpyxl import load_workbook
 import logging
 from logging.handlers import RotatingFileHandler
 from logging import StreamHandler
-
-def create_user_from_name_file(path:str, script_file_name:str):
-    if not script_file_name.endswith(".sh"): script_file_name = script_file_name + ".sh"
-    with open(script_file_name, 'w') as file:
-        file.write("#! /bin/sh\n")
-        user_dict = dict()
-        for first_name, last_name, group, school_class in get_people_from_name_file(path):
-            username = last_name.replace(r"\s*", "_")
-            if username in user_dict:
-                username = username+ f"_{user_dict[username]}"
-                user_dict[username] = user_dict[username] + 1
-            else:
-                user_dict[username] = 1
-            command = f"useradd {username} -d "
-
-def get_people_from_name_file(path):
-    wb = load_workbook(Path(path), read_only=True)
-    ws = wb[wb.sheetnames[0]]
-    for row in ws.iter_rows(min_row=2):
-        first_name = row[0].value
-        last_name = row[1].value
-        group = row[2].value
-        school_class = row[3].value
-        yield first_name, last_name, group, school_class
 
 
 def create_class_user_files(path:str):
@@ -43,7 +21,7 @@ def create_class_user_files(path:str):
                 class_name = str(class_name)
                 room = str(room)
                 kv = str(kv)
-                username = f'k{str(class_name).lower()}'
+                username = replace_umlaute_and_remove_accents(f'k{str(class_name).lower()}')
                 if username in user_dict:
                     logger.error(f"User duplicate: {username}. Programm is terminating!")
                     break
@@ -63,6 +41,27 @@ def create_class_user_files(path:str):
 
 def get_random_pw_char():
     return "!%&(),._-=^#"[random.randint(0, 11)]
+
+
+def replace_umlaute_and_remove_accents(username):
+    """
+
+    >>> original_username = "Mädchën José"
+    >>> cleaned_username = replace_umlaute_and_remove_accents(original_username)
+    >>> print(cleaned_username)
+    Maedchen Jose
+    >>> cleaned_username = replace_umlaute_and_remove_accents("Bernt Straßenbahner")
+    >>> print(cleaned_username)
+    Bernt Strassenbahner
+    """
+    username = username.replace('ä', 'ae').replace('ö', 'oe').replace('ü', 'ue').replace('ß', 'ss')
+
+
+    norm_txt = unicodedata.normalize('NFD', username)
+    shaved = ''.join(c for c in norm_txt if not unicodedata.combining(c))
+    username = unicodedata.normalize('NFC', shaved)
+
+    return username
 
 
 def get_classes_from_class_file(path:str):
