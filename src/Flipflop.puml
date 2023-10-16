@@ -1,12 +1,5 @@
 @startuml
 
-class Taster{
-Output out
-Taster(output)
-press()
-release()
-}
-
 abstract class Component {
 String name
 List<Input> inputs
@@ -46,6 +39,13 @@ class LED{
 boolean isOn
 LED(boolean)
 calcState()
+}
+
+class Taster{
+Output out
+Taster(output)
+press()
+releasePress()
 }
 
 Component <|-- LED
