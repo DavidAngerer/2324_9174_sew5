@@ -1,68 +1,56 @@
 @startuml
 
-abstract class Node {
-    - boolean isHigh
-    + {abstract} void set(boolean)
+class Taster{
+Output out
+Taster(output)
+press()
+release()
 }
-
-class Input {
-    - Component component
-    + Input(Component component)
-    + Component getComponent()
-    + void set(boolean)
-}
-Input --|> Node
-
-class Output {
-    - List<Input> inputList
-    + Output()
-    + void set(boolean)
-    + void connectTo(Input)
-    + List<Input> getInputList()
-}
-Output --|> Node
-
-class InvertedOutput {
-    - List<Input> inputList
-    + InvertedOutput()
-    + void set(boolean)
-    + void connectTo(Input)
-    + List<Input> getInputList()
-}
-InvertedOutput --|> Output
 
 abstract class Component {
-    - Input[] inputs
-    - Output[] outputs
-    - String name
-    + Component(int, int, String)
-    + {abstract} void calc()
-    + void dispatch()
-    + void connectInput(int, Input)
-    + void connectOutput(int, Output)
-    + String toString()
+String name
+List<Input> inputs
+List<Output> outputs
+Component(name, inputs, outputs)
+calcState()
 }
 
-class Taster {
-    - Output output
-    + Taster(Output)
-    + void press()
-    + void release()
+class Input{
+Component comp
+Input(component)
 }
 
-class FlipFlop {
-    - FlipFlop.State state
-    + FlipFlop(String)
-    + void calc()
+abstract class Node{
+boolean state
+Node(state)
+getState()
+setState(state)
 }
-FlipFlop --|> Component
 
-
-class LED {
-    + LED(String)
-    + boolean isShining()
-    + void calc()
+class Output{
+List<Input> inputs
+Output(inputs)
 }
-LED --|> Component
+
+class FF{
+boolean state
+int set
+int reset
+int q
+int not_q
+FF(name, inputs, outputs)
+calcState()
+}
+
+class LED{
+boolean isOn
+LED(boolean)
+calcState()
+}
+
+Component <|-- LED
+Component <|-- FF
+Node <|-- Output
+Node <|-- Input
 
 @enduml
