@@ -34,13 +34,13 @@ public class FlipFlop extends Component {
 
     @Override
     void calcState() {
-        if (inputs.size() > RESET && inputs.get(RESET) != null && inputs.get(RESET).getState()) { // Liste hat zwei Stellen, mit erstem check checkt man ob es mindestens 2 lang is
+        if (inputs.size() > RESET && inputs.get(RESET) != null && inputs.get(RESET).getState()) {
             state = false;
-        } else if (inputs.size() > SET && inputs.get(SET) != null && inputs.get(SET).getState()){ //aber hier braucht man theoretisch kein Reset also reicht auch eine Stelle
+        } else if (inputs.size() > SET && inputs.get(SET) != null && inputs.get(SET).getState()){
             state = true;
         }
 
-        if (outputs.size() > Q && outputs.get(Q) != null) { // wenn man nur invertiertes haben will kann man einfach beim normalen null angeben und dann is es nur das andere
+        if (outputs.size() > Q && outputs.get(Q) != null) {
             outputs.get(Q).setState(state);
         }
         if (outputs.size() > NOT_Q && outputs.get(NOT_Q) != null) {

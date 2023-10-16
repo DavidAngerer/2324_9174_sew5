@@ -1,7 +1,7 @@
-import java.util.List;
 /**
  * @author David Angelo, 5CN
  */
+import java.util.List;
 
 public abstract class Component {
     String name;
@@ -18,6 +18,4 @@ public abstract class Component {
      * calculates the current State of the Flipflop on the basis od its nodes
      */
     abstract void calcState();
-
-
 }
