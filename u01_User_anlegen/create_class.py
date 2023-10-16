@@ -16,6 +16,10 @@ def create_class_user_files(path:str):
             file.write("#! /bin/sh\n")
             file_delete.write("#! /bin/sh\n")
             file.write("groupadd klasse\n")
+            file.write("groupadd lehrer\n")
+            file.write("groupadd seminar\n")
+            file.write("useradd -d /home/lehrer -g lehrer -c \"lehrer\" -s /bin/bash -G cdrom,plugdev,sambashare lehrer\n")
+            file.write("useradd -d /home/seminar -g seminar -c \"seminar\" -s /bin/bash -G cdrom,plugdev,sambashare seminar\n")
             user_dict = dict()
             for class_name, room, kv in get_classes_from_class_file(path):
                 class_name = str(class_name)
@@ -107,5 +111,5 @@ if __name__ == '__main__':
     logger.addHandler(stream_handler)
     logger.info("Logging turned on " + str(logger.level))
     # create_user_from_name_file("../../res/Namen.xlsx")
-    create_class_user_files("../../res/Klajssenraeume_2023.xlsx")
+    create_class_user_files("../../res/Klassenraeume_2023.xlsx")
 

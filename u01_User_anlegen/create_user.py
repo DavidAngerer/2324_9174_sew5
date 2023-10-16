@@ -3,6 +3,7 @@ import random
 import string
 from pathlib import Path
 
+import openpyxl
 import unicodedata
 from openpyxl import load_workbook
 import logging
@@ -10,22 +11,41 @@ from logging.handlers import RotatingFileHandler
 from logging import StreamHandler
 
 def create_user_from_name_file(path:str):
+    workbook = openpyxl.Workbook()
+    sheet = workbook.active
+    sheet['A1'] = 'Name'
+    sheet['B1'] = 'Password'
     with open("create_real_users.sh", 'w') as file, open("delete_real_users.sh", 'w') as file_delete, \
             open("userlist.txt", 'w') as user_list_file:
         file.write("#! /bin/sh\n")
         file_delete.write("#! /bin/sh\n")
         file.write("groupadd schueler\n")
         user_dict = dict()
+        index = 2
         for first_name, last_name, group, school_class in get_people_from_name_file(path):
-            username = replace_umlaute_and_remove_accents(last_name)
+            username = replace_umlaute_and_remove_accents(last_name).replace(" ", "_")
             if username in user_dict:
+                user_dict[username] += 1
                 username = username+ f"_{user_dict[username]}"
-                user_dict[username] = user_dict[username] + 1
             else:
-                user_dict[username] = 1
-            command = f"useradd -d /home/klassen/{username} -g schueler -c \"{username} - {school_class}\" " \
-                      f"-s /bin/bash -G cdrom,plugdev,sambashare {username}"
+                user_dict[username] = 0
+            command = f"useradd -d \"/home/klassen/{username}\" -g schueler -c \"{username} - {school_class}\" " \
+                      f"-s /bin/bash -G cdrom,plugdev,sambashare {username}\n"
             password = get_random_password()
+            file.write(command)
+            logger.debug(f"User created: {username}")
+            passwd_command = f'echo {username}:{password} | chpasswd\n'
+            file.write(passwd_command)
+            logger.debug(f"User password created for {username}")
+            file_delete.write(f'userdel -r {username}\n')
+            logger.debug(f"User deletion written for {username}")
+            user_list_file.write(f'username: {username}, password: {password}\n')
+            logger.debug(f"User \"{username}\" added to list")
+            sheet[f'A{index}'] = username
+            sheet[f'B{index}'] = password
+            index+=1
+    workbook.save('users.xlsx')
+
 
 def get_people_from_name_file(path):
     wb = load_workbook(Path(path), read_only=True)
@@ -38,11 +58,11 @@ def get_people_from_name_file(path):
         yield first_name, last_name, group, school_class
 
 
-def get_random_password():
+def get_random_password() -> str:
     """
     :return: 12 letter password
     """
-    return [random.choice(string.ascii_letters + '!%&(),._-=^#' + string.digits) if i>0 else random.choice(string.ascii_letters) for i in range(0-12)]
+    return "".join([random.choice(string.ascii_letters + '!%&(),._-=^#' + string.digits) if i>0 else random.choice(string.ascii_letters) for i in range(12)])
 
 
 def replace_umlaute_and_remove_accents(username):
@@ -91,4 +111,4 @@ if __name__ == '__main__':
     logger.addHandler(stream_handler)
     logger.info("Logging turned on " + str(logger.level))
     # create_user_from_name_file("../../res/Namen.xlsx")
-    create_user_from_name_file("../../res/Klajssenraeume_2023.xlsx")
+    create_user_from_name_file("../../res/Namen.xlsx")
