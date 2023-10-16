@@ -2,6 +2,7 @@ import argparse
 import random
 import string
 from pathlib import Path
+from typing import Generator
 
 import openpyxl
 import unicodedata
@@ -11,6 +12,10 @@ from logging.handlers import RotatingFileHandler
 from logging import StreamHandler
 
 def create_user_from_name_file(path:str):
+    """
+    creates a user class bash file, a delteion file and a userlist
+    :param path: The excel file
+    """
     try:
         workbook = openpyxl.Workbook()
         sheet = workbook.active
@@ -50,7 +55,12 @@ def create_user_from_name_file(path:str):
     except Exception:
         logger.critical("Couldn't write in one of the Files")
 
-def get_people_from_name_file(path):
+def get_people_from_name_file(path) -> Generator[str, None, None]:
+    """
+        a generator that reads from excel file
+        :param path: the path of excel file
+        :return: tuple(first_name, last_name, group, school_class)
+        """
     try:
         wb = load_workbook(Path(path), read_only=True)
         ws = wb[wb.sheetnames[0]]
@@ -74,7 +84,6 @@ def get_random_password() -> str:
 
 def replace_umlaute_and_remove_accents(username):
     """
-
     >>> original_username = "Mädchën José"
     >>> cleaned_username = replace_umlaute_and_remove_accents(original_username)
     >>> print(cleaned_username)

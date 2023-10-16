@@ -1,6 +1,7 @@
 import argparse
 import random
 from pathlib import Path
+from typing import Generator
 
 import unicodedata
 from openpyxl import load_workbook
@@ -9,7 +10,11 @@ from logging.handlers import RotatingFileHandler
 from logging import StreamHandler
 
 
-def create_class_user_files(path:str):
+def create_class_user_files(path:str) -> None:
+    """
+    creates a user class bash file, a delteion file and a userlist
+    :param path: The excel file
+    """
     try:
         with open("create_users.sh", 'w') as file, open("delete_users.sh", 'w') as file_delete, \
                 open("userlist.txt", 'w') as user_list_file:
@@ -44,12 +49,15 @@ def create_class_user_files(path:str):
         logger.critical("Couldn't write in one of the Files")
 
 def get_random_pw_char():
+    """
+    :return: a random character from !%&(),._-=^#
+    """
     return "!%&(),._-=^#"[random.randint(0, 11)]
 
 
 def replace_umlaute_and_remove_accents(username):
     """
-
+    Replaces accents and replaces umlaute
     >>> original_username = "Mädchën José"
     >>> cleaned_username = replace_umlaute_and_remove_accents(original_username)
     >>> print(cleaned_username)
@@ -68,7 +76,12 @@ def replace_umlaute_and_remove_accents(username):
     return username
 
 
-def get_classes_from_class_file(path:str):
+def get_classes_from_class_file(path:str) -> Generator[str, None, None]:
+    """
+    a generator that reads from excel file
+    :param path: the path of excel file
+    :return: tuple(class_name, room, kv)
+    """
     try:
         wb = load_workbook(Path(path), read_only=True)
         ws = wb[wb.sheetnames[0]]
