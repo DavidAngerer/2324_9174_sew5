@@ -1,7 +1,7 @@
 package u2_labyrinth;
 //TODO: Mein Name in der Javadoc
 
-import java.util.Arrays;
+import java.util.ArrayList;
 
 public class Labyrinth {
 	public static String[][] maps = {{
@@ -100,6 +100,47 @@ public class Labyrinth {
 	public static boolean suchen(int zeile, int spalte, char[][] lab) throws InterruptedException {
 		// TODO Code fehlt noch
 		// nur lab[zeile][spalte] betrachten
+
+		return false;
+	}
+
+	public static boolean check_out_neighbor(int zeile, int spalte, char[][] lab, boolean[][] path) {
+		path[zeile][spalte] = true;
+		ArrayList<int[]> neighborList = getNeighbors(zeile, spalte, lab, path);
+		if (neighborIsGoal(neighborList,lab)) {
+			return true;
+		}
+		for (int[] neighbor: neighborList) {
+			if (check_out_neighbor(zeile, spalte, lab, path)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public static ArrayList<int[]> getNeighbors(int zeile, int spalte, char[][] lab, boolean[][] path) {
+		ArrayList<int[]> neighborList = new ArrayList<>();
+		if (zeile > 1 && (lab[zeile-1][spalte] == ' ' || lab[zeile-1][spalte] == 'A') && !path[zeile-1][spalte]) {
+			neighborList.add(new int[]{zeile-1,spalte});
+		}
+		if (spalte > 1 && (lab[zeile][spalte-1] == ' ' || lab[zeile][spalte-1] == 'A') && !path[zeile][spalte-1]) {
+			neighborList.add(new int[]{zeile,spalte-1});
+		}
+		if (zeile+1 < lab.length && (lab[zeile+1][spalte] == ' ' || lab[zeile+1][spalte] == 'A') && !path[zeile+1][spalte]) {
+			neighborList.add(new int[]{zeile+1,spalte});
+		}
+		if (spalte +1 < lab[zeile].length && (lab[zeile][spalte+1] == ' ' || lab[zeile][spalte+1] == 'A') && !path[zeile][spalte+1]) {
+			neighborList.add(new int[]{zeile,spalte+1});
+		}
+		return neighborList;
+	}
+
+	public static boolean neighborIsGoal(ArrayList<int[]> neighborList, char[][] lab) {
+		for (int[] neighbor: neighborList) {
+			if (lab[neighbor[0]][neighbor[1]] == 'A') {
+				return true;
+			}
+		}
 		return false;
 	}
 
