@@ -28,8 +28,8 @@ public class FlipFlop extends Component {
      */
     public static final int NOT_Q = 1;
 
-    public FlipFlop(String name, List<Node> inputs, List<Node> outputs) {
-        super(name, inputs, outputs);
+    public FlipFlop(String name) {
+        super(name, 2, 2);
     }
 
     @Override
@@ -48,28 +48,30 @@ public class FlipFlop extends Component {
         }
     }
 
+    public void setState(int input, boolean state) {
+        inputs.get(input).setState(state);
+    }
+
+    public boolean getState(int output) {
+        return outputs.get(output).getState();
+    }
+
     public static void main(String[] args) {
-        Node s = new Node();
-        Node rs = new Node();
-        Node q = new Node();
-        Node nq = new Node();
+        FlipFlop f = new FlipFlop("FF1");
 
-
-        FlipFlop f = new FlipFlop("FF1", Arrays.asList(s, rs), Arrays.asList(q, nq));
-
-        s.setState(true);
+        f.setState(FlipFlop.SET,true);
         f.calcState();
-        System.out.println(q.getState());
-        System.out.println(nq.getState());
+        System.out.println(f.getState(FlipFlop.Q));
+        System.out.println(f.getState(FlipFlop.NOT_Q));
 
-        rs.setState(true);
-        f.calcState();
-        System.out.println(q.getState());
-        System.out.println(nq.getState());
-
-        rs.setState(false);
-        f.calcState();
-        System.out.println(q.getState());
-        System.out.println(nq.getState());
+//        rs.setState(true);
+//        f.calcState();
+//        System.out.println(q.getState());
+//        System.out.println(nq.getState());
+//
+//        rs.setState(false);
+//        f.calcState();
+//        System.out.println(q.getState());
+//        System.out.println(nq.getState());
     }
 }
