@@ -1,6 +1,9 @@
 package u2_labyrinth;
 //TODO: Mein Name in der Javadoc
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class Labyrinth {
@@ -67,7 +70,13 @@ public class Labyrinth {
 	 * @return char[][] des Plans
 	 */
 	public static char[][] fromStrings(String[] map) {
-		char [][] erg = new char[map.length][map[0].length()];
+		int maxLength = 0;
+		for (String str : map) {
+			if (str.length() > maxLength) {
+				maxLength = str.length();
+			}
+		}
+		char [][] erg = new char[map.length][maxLength];
 		for (int i = 0; i < map.length; i++) {
 			for (int j = 0; j < map[i].length(); j++) {
 				erg[i][j] = map[i].charAt(j);
@@ -194,12 +203,38 @@ public class Labyrinth {
 		//System.out.println(Arrays.toString(maps[2]));
 		for (int i = 0; i < maps.length-1; i++) {
 			char[][] labyrinth = fromStrings(maps[i]);
-			printLabyrinth(labyrinth);
+			//printLabyrinth(labyrinth);
 			System.out.println("Ausgang gefunden: " + (suchen(5, 5, labyrinth) ? "ja" : "nein"));
 			System.out.println("Anzahl Wege: " + suchenAlle(5, 5, labyrinth));
 		}
 		char[][] labyrinth = fromStrings(maps[3]);
-		printLabyrinth(labyrinth);
+		//printLabyrinth(labyrinth);
+		System.out.println("Ausgang gefunden: " + (suchen(1, 1, labyrinth) ? "ja" : "nein"));
+		System.out.println("Anzahl Wege: " + suchenAlle(1, 1, labyrinth));
+
+		doLabyrinthCodeOnFile("src/u2_labyrinth/l1.txt");
+		doLabyrinthCodeOnFile("src/u2_labyrinth/l2.txt");
+		doLabyrinthCodeOnFile("src/u2_labyrinth/l3.txt");
+	}
+
+	private static void doLabyrinthCodeOnFile(String filePath) throws InterruptedException {
+		 // Replace with your file path
+		ArrayList<String> lines = new ArrayList<>();
+
+		try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+			String line;
+			while ((line = reader.readLine()) != null) {
+				lines.add(line);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		// Convert the list to an array
+		String[] linesArray = lines.toArray(new String[0]);
+
+		char[][] labyrinth = fromStrings(linesArray);
+		//printLabyrinth(labyrinth);
 		System.out.println("Ausgang gefunden: " + (suchen(1, 1, labyrinth) ? "ja" : "nein"));
 		System.out.println("Anzahl Wege: " + suchenAlle(1, 1, labyrinth));
 	}
