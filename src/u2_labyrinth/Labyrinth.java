@@ -122,10 +122,10 @@ public class Labyrinth {
 	public static int get_number_paths(int zeile, int spalte, char[][] lab, boolean[][] path, int counter) {
 		path[zeile][spalte] = true;
 		ArrayList<int[]> neighborList = getNeighbors(zeile, spalte, lab, path);
-		printLabyrinthpath(lab,path);
-		System.out.println("---------------------------------------------------");
+		//printLabyrinthpath(lab,path);
+		//System.out.println("---------------------------------------------------");
 		if (neighborIsGoal(neighborList,lab)) {
-			printLabyrinthpath(lab,path);
+			//printLabyrinthpath(lab,path);
 			path[zeile][spalte] = false;
 			return counter+1;
 		}
@@ -140,7 +140,7 @@ public class Labyrinth {
 		path[zeile][spalte] = true;
 		ArrayList<int[]> neighborList = getNeighbors(zeile, spalte, lab, path);
 		if (neighborIsGoal(neighborList,lab)) {
-			printLabyrinthpath(lab,path);
+			//printLabyrinthpath(lab,path);
 			return true;
 		}
 		for (int[] neighbor: neighborList) {
@@ -192,9 +192,15 @@ public class Labyrinth {
 
 	public static void main(String[] args) throws InterruptedException {
 		//System.out.println(Arrays.toString(maps[2]));
-		char[][] labyrinth = fromStrings(maps[0]);
+		for (int i = 0; i < maps.length-1; i++) {
+			char[][] labyrinth = fromStrings(maps[i]);
+			printLabyrinth(labyrinth);
+			System.out.println("Ausgang gefunden: " + (suchen(5, 5, labyrinth) ? "ja" : "nein"));
+			System.out.println("Anzahl Wege: " + suchenAlle(5, 5, labyrinth));
+		}
+		char[][] labyrinth = fromStrings(maps[3]);
 		printLabyrinth(labyrinth);
-		System.out.println("Ausgang gefunden: " + (suchen(5, 5, labyrinth) ? "ja" : "nein"));
-		System.out.println("Anzahl Wege: " + suchenAlle(5, 5, labyrinth));
+		System.out.println("Ausgang gefunden: " + (suchen(1, 1, labyrinth) ? "ja" : "nein"));
+		System.out.println("Anzahl Wege: " + suchenAlle(1, 1, labyrinth));
 	}
 }
