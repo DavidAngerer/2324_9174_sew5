@@ -98,24 +98,41 @@ public class Labyrinth {
 	 * @throws InterruptedException    für die verlangsamte Ausgabe mit sleep()
 	 */
 	public static boolean suchen(int zeile, int spalte, char[][] lab) throws InterruptedException {
-		// TODO Code fehlt noch
-		// nur lab[zeile][spalte] betrachten
-
-		return false;
+		boolean[][] path = new boolean[lab.length][lab[0].length];
+		for (int i = 0; i < lab.length; i++) {
+			for (int j = 0; j < lab[i].length; j++) {
+				path[i][j] = false;
+			}
+		}
+		return check_out_neighbor(zeile,spalte,lab,path);
 	}
 
 	public static boolean check_out_neighbor(int zeile, int spalte, char[][] lab, boolean[][] path) {
 		path[zeile][spalte] = true;
 		ArrayList<int[]> neighborList = getNeighbors(zeile, spalte, lab, path);
 		if (neighborIsGoal(neighborList,lab)) {
+			printLabyrinthpath(lab,path);
 			return true;
 		}
 		for (int[] neighbor: neighborList) {
-			if (check_out_neighbor(zeile, spalte, lab, path)) {
+			if (check_out_neighbor(neighbor[0], neighbor[1], lab, path)) {
 				return true;
 			}
 		}
 		return false;
+	}
+
+	public static void printLabyrinthpath(char[][] lab, boolean[][] path) {
+		for (int i = 0; i < lab.length; i++) {
+			for (int j = 0; j < lab[i].length; j++) {
+				if (path[i][j]) {
+					System.out.print("P");
+				}else{
+					System.out.print(lab[i][j]);
+				}
+			}
+			System.out.println();
+		}
 	}
 
 	public static ArrayList<int[]> getNeighbors(int zeile, int spalte, char[][] lab, boolean[][] path) {
