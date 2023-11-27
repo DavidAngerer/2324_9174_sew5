@@ -79,7 +79,7 @@ def get_random_password() -> str:
     """
     :return: 12 letter password
     """
-    return "".join([random.choice(string.ascii_letters + '!%&(),._-=^#' + string.digits) if i>0 else random.choice(string.ascii_letters) for i in range(12)])
+    return "".join([random.choice(string.ascii_letters + '!%&(),._-=^#' + string.digits) if i > 0 else random.choice(string.ascii_letters) for i in range(12)])
 
 
 def replace_umlaute_and_remove_accents(username):

@@ -1,5 +1,6 @@
 import argparse
 import random
+import sys
 from pathlib import Path
 from typing import Generator
 
@@ -10,7 +11,7 @@ from logging.handlers import RotatingFileHandler
 from logging import StreamHandler
 
 
-def create_class_user_files(path:str) -> None:
+def create_class_user_files(path: str) -> None:
     """
     creates a user class bash file, a delteion file and a userlist
     :param path: The excel file
@@ -100,10 +101,9 @@ def get_classes_from_class_file(path:str) -> Generator[str, None, None]:
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-
-    parser.add_argument("-q", "--quiet", help='Only Log Errors', required=False, action='store_true')
-    parser.add_argument("-v", "--verbose", help='Log Verbose Debug', required=False, action='store_true')
-
+    group = parser.add_mutually_exclusive_group()
+    group.add_argument("-q", "--quiet", help='Only Log Errors', required=False, action='store_true')
+    group.add_argument("-v", "--verbose", help='Log Verbose Debug', required=False, action='store_true')
 
     args = parser.parse_args()
     global logger
