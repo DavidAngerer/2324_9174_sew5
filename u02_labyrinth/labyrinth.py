@@ -1,9 +1,21 @@
+"""
+@Author David Angelo 5CN
+"""
 import argparse
 import time
 from pathlib import Path
 from typing import List
 
 def do_labyrinthy_code_on_file(filepath:str, x_pos:int, y_pos:int):
+    """
+    Diese Funktion liest ein Labyrinth aus einer Datei, startet die Suche nach Wegen durch das Labyrinth
+    und gibt verschiedene Statistiken aus.
+
+    Args:
+        filepath (str): Der Pfad zur Datei, die das Labyrinth enthält.
+        x_pos (int): Die Start-x-Position im Labyrinth.
+        y_pos (int): Die Start-y-Position im Labyrinth.
+    """
     labyrinth = get_labyrinth_from_filepath(filepath)
     #print_labyrinth(labyrinth)
     start_time = time.perf_counter_ns()
@@ -17,6 +29,12 @@ def do_labyrinthy_code_on_file(filepath:str, x_pos:int, y_pos:int):
 
 
 def get_labyrinth_from_filepath(filepath):
+    """
+    Diese Funktion liest das Labyrinth aus einer Datei und gibt es als Liste von Listen von Zeichen zurück.
+
+    :param filepath: (str)Der Pfad zur Datei, die das Labyrinth enthält.
+    :return: List[List[str]]: Das Labyrinth als Liste von Listen von Zeichen.
+    """
     with open(Path(filepath), 'r') as f:
         strings = f.readlines()
     labyrinth = convert_strings_to_chars([string.strip() for string in strings])
@@ -26,11 +44,33 @@ def get_labyrinth_from_filepath(filepath):
 
 
 def anzahl_wege(zeile:int, spalte:int,lab:List[List],print_path=False, wait_time=0) -> int:
+    """
+    Berechnet die Anzahl der Wege von einer gegebenen Position im Labyrinth zu einem Ausgang.
+    :param zeile: Die Startzeile im Labyrinth.
+    :param spalte (int): Die Startspalte im Labyrinth.
+    :param lab (List[List[str]]): Das Labyrinth als Liste von Listen von Zeichen.
+    :param print_path (bool): Ob der gefundene Weg im Labyrinth ausgegeben werden soll.
+    :param wait_time (int): Verzögerung nach jedem Schritt bei der Ausgabe des Wegs in Millisekunden.
+    :return: int: Die Anzahl der möglichen Wege von der Startposition zum Ausgang.
+    """
     path = get_path(lab)
     return getNumberPaths(zeile=zeile,spalte=spalte,lab=lab,path=path,print_path=print_path, wait_time=wait_time)
 
 
 def getNumberPaths(zeile:int, spalte:int,lab:List[List], path:List[List],print_path=False,wait_time=0, counter=0) -> int:
+    """
+    Berechnet die Anzahl der Wege von einer gegebenen Position im Labyrinth zu einem Ausgang.
+
+    :param zeile: Die Startzeile im Labyrinth.
+    :param spalte: Die Startspalte im Labyrinth.
+    :param lab: Das Labyrinth als Liste von Listen von Zeichen.
+    :param path: Eine Liste, die den aktuellen Pfad im Labyrinth verfolgt.
+    :param print_path: Ob der gefundene Weg im Labyrinth ausgegeben werden soll.
+    :param wait_time: Verzögerung nach jedem Schritt bei der Ausgabe des Wegs in Millisekunden.
+    :param counter: Der Zähler für die Anzahl der gefundenen Wege.
+
+    :return: Die Anzahl der möglichen Wege von der Startposition zum Ausgang.
+    """
     path[zeile][spalte] = True
     neighbors = get_Neighbors(zeile, spalte, lab, path)
     if isNeighborGoal(neighbors, lab):
@@ -48,11 +88,29 @@ def getNumberPaths(zeile:int, spalte:int,lab:List[List], path:List[List],print_p
 
 
 def suchen(zeile:int, spalte:int,lab:List[List]) -> bool:
+    """
+    Überprüft, ob es einen Weg von einer gegebenen Position im Labyrinth zu einem Ausgang gibt.
+
+    :param zeile: Die Startzeile im Labyrinth.
+    :param spalte: Die Startspalte im Labyrinth.
+    :param lab: Das Labyrinth als Liste von Listen von Zeichen.
+
+    :return: True, wenn ein Weg existiert, ansonsten False.
+    :rtype: bool
+    """
     path = get_path(lab)
     return is_path_possible(zeile, spalte, lab, path)
 
 
 def get_path(lab) -> List[List]:
+    """
+    Erstellt eine Liste, um den Pfad im Labyrinth zu verfolgen.
+
+    :param lab: Das Labyrinth als Liste von Listen von Zeichen.
+
+    :return: Eine Liste, um den Pfad im Labyrinth zu verfolgen.
+    :rtype: List[List[bool]]
+    """
     path = []
     for index, line in enumerate(lab):
         path.append([])
@@ -62,6 +120,17 @@ def get_path(lab) -> List[List]:
 
 
 def is_path_possible(zeile:int, spalte:int,lab:List[List], path:List[List]) -> bool:
+    """
+    Überprüft, ob es einen möglichen Weg von einer gegebenen Position im Labyrinth zu einem Ausgang gibt.
+
+    :param zeile: Die Startzeile im Labyrinth.
+    :param spalte: Die Startspalte im Labyrinth.
+    :param lab: Das Labyrinth als Liste von Listen von Zeichen.
+    :param path: Eine Liste, die den aktuellen Pfad im Labyrinth verfolgt.
+
+    :return: True, wenn ein möglicher Weg existiert, ansonsten False.
+    :rtype: bool
+    """
     path[zeile][spalte] = True
     neighbors = get_Neighbors(zeile, spalte, lab, path)
     if isNeighborGoal(neighbors,lab):
@@ -75,12 +144,32 @@ def is_path_possible(zeile:int, spalte:int,lab:List[List], path:List[List]) -> b
 
 
 def isNeighborGoal(neighbors: List[tuple[int,int]], lab:List[List]) -> bool:
+    """
+    Überprüft, ob eine der benachbarten Positionen das Ziel 'A' ist.
+
+    :param neighbors: Eine Liste der benachbarten Positionen.
+    :param lab: Das Labyrinth als Liste von Listen von Zeichen.
+
+    :return: True, wenn eine benachbarte Position das Ziel 'A' ist, ansonsten False.
+    :rtype: bool
+    """
     for neighbor in neighbors:
         if lab[neighbor[0]][neighbor[1]] == 'A':
             return True
     return False
 
 def get_Neighbors(zeile:int, spalte:int,lab:List[List], path:List[List]) -> List[tuple[int,int]]:
+    """
+    Gibt eine Liste der benachbarten Positionen zurück.
+
+    :param zeile: Die aktuelle Zeile im Labyrinth.
+    :param spalte: Die aktuelle Spalte im Labyrinth.
+    :param lab: Das Labyrinth als Liste von Listen von Zeichen.
+    :param path: Eine Liste, die den aktuellen Pfad im Labyrinth verfolgt.
+
+    :return: Eine Liste der benachbarten Positionen.
+    :rtype: List[tuple[int, int]]
+    """
     neighbors = []
     if (zeile > 1) and ((lab[zeile-1][spalte] == ' ') or (lab[zeile-1][spalte] == 'A')) and not(path[zeile-1][spalte]):
         neighbors.append((zeile-1,spalte))
@@ -94,6 +183,13 @@ def get_Neighbors(zeile:int, spalte:int,lab:List[List], path:List[List]) -> List
 
 
 def print_labyrinth(labyrinth:List[List], path=[]):
+    """
+    Gibt das Labyrinth zusammen mit dem Pfad (falls vorhanden) auf der Konsole aus.
+
+    :param labyrinth: Das Labyrinth als Liste von Listen von Zeichen.
+    :param path: Eine Liste, die den aktuellen Pfad im Labyrinth verfolgt.
+
+    """
     print("------------------------------------")
     for index, line in enumerate(labyrinth):
         for index_col,char in enumerate(line):
@@ -105,6 +201,14 @@ def print_labyrinth(labyrinth:List[List], path=[]):
 
 
 def convert_strings_to_chars(strings:List) -> List[List]:
+    """
+    Konvertiert eine Liste von Zeichenketten in eine Liste von Listen von Zeichen.
+
+    :param strings: Eine Liste von Zeichenketten.
+
+    :return: Eine Liste von Listen von Zeichen.
+    :rtype: List[List[str]]
+    """
     erg = [[]]
     for index_string, string in enumerate(strings):
         erg.append([])
