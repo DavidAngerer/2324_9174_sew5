@@ -235,7 +235,15 @@ public class Labyrinth {
 
 		char[][] labyrinth = fromStrings(linesArray);
 		//printLabyrinth(labyrinth);
+		long startTime = System.nanoTime();
 		System.out.println("Ausgang gefunden: " + (suchen(1, 1, labyrinth) ? "ja" : "nein"));
 		System.out.println("Anzahl Wege: " + suchenAlle(1, 1, labyrinth));
+		// Get the end time
+		long endTime = System.nanoTime();
+
+		// Calculate the elapsed time in milliseconds
+		long elapsedTimeMillis = (endTime - startTime) / 1000;
+
+		System.out.println("Elapsed Time: " + elapsedTimeMillis + " microseconds");
 	}
 }
