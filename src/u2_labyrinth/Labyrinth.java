@@ -1,11 +1,17 @@
 package u2_labyrinth;
-//TODO: Mein Name in der Javadoc
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
+
+/**
+ * The Labyrinth class represents a labyrinth puzzle solver.
+ * It includes methods to find a path through a labyrinth,
+ * count the number of possible paths, and print the labyrinth.
+ * @author David Angelo 5CN
+ */
 public class Labyrinth {
 	public static String[][] maps = {{
 		"############",
@@ -117,6 +123,15 @@ public class Labyrinth {
 	}
 
 
+	/**
+	 * Counts all possible paths from a starting position to the goal in the labyrinth.
+	 *
+	 * @param zeile   The starting row.
+	 * @param spalte  The starting column.
+	 * @param lab     The labyrinth represented as a 2D char array.
+	 * @return The number of possible paths to the goal.
+	 * @throws InterruptedException If the thread is interrupted during sleep.
+	 */
 	public static int suchenAlle(int zeile, int spalte, char[][] lab) throws InterruptedException {
 		boolean[][] path = new boolean[lab.length][lab[0].length];
 		for (int i = 0; i < lab.length; i++) {
@@ -128,6 +143,16 @@ public class Labyrinth {
 	}
 
 
+	/**
+	 * Recursively counts all paths from a starting position to the goal in the labyrinth.
+	 *
+	 * @param zeile The current row in the labyrinth.
+	 * @param spalte The current column in the labyrinth.
+	 * @param lab The labyrinth represented as a 2D char array.
+	 * @param path A 2D boolean array representing visited positions.
+	 * @param counter The count of paths found so far.
+	 * @return The updated number of paths to the goal.
+	 */
 	public static int get_number_paths(int zeile, int spalte, char[][] lab, boolean[][] path, int counter) {
 		path[zeile][spalte] = true;
 		ArrayList<int[]> neighborList = getNeighbors(zeile, spalte, lab, path);
@@ -145,6 +170,16 @@ public class Labyrinth {
 		return counter;
 	}
 
+
+	/**
+	 * Explores neighboring cells to find a path to the goal in the labyrinth.
+	 *
+	 * @param zeile The current row in the labyrinth.
+	 * @param spalte The current column in the labyrinth.
+	 * @param lab The labyrinth represented as a 2D char array.
+	 * @param path A 2D boolean array representing visited positions.
+	 * @return True if a path to the goal is found, false otherwise.
+	 */
 	public static boolean check_out_neighbor(int zeile, int spalte, char[][] lab, boolean[][] path) {
 		path[zeile][spalte] = true;
 		ArrayList<int[]> neighborList = getNeighbors(zeile, spalte, lab, path);
@@ -160,6 +195,14 @@ public class Labyrinth {
 		return false;
 	}
 
+
+	/**
+	 * Prints the current path through the labyrinth to the console.
+	 * Marks the path with 'P' and unvisited parts with their original characters.
+	 *
+	 * @param lab The labyrinth represented as a 2D char array.
+	 * @param path A 2D boolean array representing the path taken.
+	 */
 	public static void printLabyrinthpath(char[][] lab, boolean[][] path) {
 		for (int i = 0; i < lab.length; i++) {
 			for (int j = 0; j < lab[i].length; j++) {
@@ -173,6 +216,16 @@ public class Labyrinth {
 		}
 	}
 
+
+	/**
+	 * Finds all possible neighboring cells that can be moved to from the current position.
+	 *
+	 * @param zeile The current row in the labyrinth.
+	 * @param spalte The current column in the labyrinth.
+	 * @param lab The labyrinth represented as a 2D char array.
+	 * @param path A 2D boolean array representing visited positions.
+	 * @return A list of int arrays, each representing the row and column of a neighbor.
+	 */
 	public static ArrayList<int[]> getNeighbors(int zeile, int spalte, char[][] lab, boolean[][] path) {
 		ArrayList<int[]> neighborList = new ArrayList<>();
 		if (zeile > 1 && (lab[zeile-1][spalte] == ' ' || lab[zeile-1][spalte] == 'A') && !path[zeile-1][spalte]) {
@@ -190,6 +243,14 @@ public class Labyrinth {
 		return neighborList;
 	}
 
+
+	/**
+	 * Checks if any of the neighboring cells is the goal ('A').
+	 *
+	 * @param neighborList A list of neighboring cells to check.
+	 * @param lab The labyrinth represented as a 2D char array.
+	 * @return True if the goal is a neighbor, false otherwise.
+	 */
 	public static boolean neighborIsGoal(ArrayList<int[]> neighborList, char[][] lab) {
 		for (int[] neighbor: neighborList) {
 			if (lab[neighbor[0]][neighbor[1]] == 'A') {
@@ -199,6 +260,12 @@ public class Labyrinth {
 		return false;
 	}
 
+	/**
+	 * The main method to run the labyrinth solver.
+	 *
+	 * @param args Command line arguments.
+	 * @throws InterruptedException If the thread is interrupted during sleep.
+	 */
 	public static void main(String[] args) throws InterruptedException {
 		//System.out.println(Arrays.toString(maps[2]));
 		for (int i = 0; i < maps.length-1; i++) {
@@ -217,6 +284,12 @@ public class Labyrinth {
 		doLabyrinthCodeOnFile("src/u2_labyrinth/l3.txt");
 	}
 
+	/**
+	 * Processes a labyrinth defined in a file and prints the results.
+	 *
+	 * @param filePath The path to the file containing the labyrinth.
+	 * @throws InterruptedException If the thread is interrupted during sleep.
+	 */
 	private static void doLabyrinthCodeOnFile(String filePath) throws InterruptedException {
 		 // Replace with your file path
 		ArrayList<String> lines = new ArrayList<>();
