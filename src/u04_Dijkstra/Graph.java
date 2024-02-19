@@ -5,7 +5,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.PriorityQueue;
 
 public class Graph {
 
@@ -17,7 +19,9 @@ public class Graph {
 
     List<Node> nodes = new ArrayList<Node>();
 
-    public void readGraphFromAdjacencyMatrixFile(Path file){
+    private PriorityQueue<Node> pq = new PriorityQueue<>(new NodeComparator());
+
+    public void readGraphFromAdjacencyMatrixFile(Path file) {
         try (BufferedReader reader = Files.newBufferedReader(file)) {
             List<String> lines = new ArrayList<>();
             String line;
@@ -30,9 +34,12 @@ public class Graph {
         }
     }
 
-    public void printNodes(){
 
+    public void calcWithDijkstra(String startNodeId){
+        Node startNode = getNodeWithChar(startNodeId);
+        pq.add(startNode);
     }
+
 
     @Override
     public String toString() {
@@ -43,7 +50,6 @@ public class Graph {
 
     private void getNodesFromLines(List<String> lines) {
         int n = lines.size();
-        int[][] adjacencyMatrix = new int[n][n];
         String[] elements = lines.get(0).split(";");
         for (int i = 1; i < elements.length; i++) {
             nodes.add(new Node(elements[i]));

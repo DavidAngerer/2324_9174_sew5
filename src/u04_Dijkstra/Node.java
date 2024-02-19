@@ -2,7 +2,7 @@ package u04_Dijkstra;
 
 import java.util.TreeSet;
 
-public class Node {
+public class Node implements Comparable {
     private String id;
     private TreeSet<Edge> edges;
     int distance = Integer.MAX_VALUE;
@@ -32,5 +32,22 @@ public class Node {
         return "Node{" +
                 "id='" + id + '\'' + "edges=" + str_edges +
                 '}';
+    }
+
+    public int getDistance() {
+        return distance;
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        if (!(o instanceof Node)) {
+            throw new IllegalArgumentException("other object needs to be node");
+        }
+        if (this.distance > ((Node) o).getDistance()) {
+            return -1;
+        } else if (this.distance < ((Node) o).getDistance()){
+            return 1;
+        }
+        return this.getId().compareTo(((Node) o).getId());
     }
 }
