@@ -72,9 +72,9 @@ public class Node implements Comparable {
         isVisited = true;
         for (Edge edge:
              edges) {
-            if (!edge.getNeighbor().isVisited && Graph.offerDistance(edge.getNeighbor(),this,edge.getDistance())) {
+            if (Graph.offerDistance(edge.getNeighbor(),this,edge.getDistance())) {
                 edge.getNeighbor().setDistance(edge.getDistance());
-                edge.getNeighbor().setPrevious(edge.getNeighbor());
+                edge.getNeighbor().setPrevious(this);
             }
         }
     }

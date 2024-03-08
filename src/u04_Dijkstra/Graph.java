@@ -28,6 +28,7 @@ public class Graph {
             for (int i = path.size()-1; i > 0; i--) {
                 erg += " --("+path.get(i).getDistance()+")-> "+path.get(i).getId();
             }
+            erg+="\n";
         }
         return erg;
     }
@@ -36,7 +37,7 @@ public class Graph {
         ArrayList<Node> path = new ArrayList<>();
         path.add(node);
         Node previous = node.getPrevious();
-        if (node.getDistance() == 0) {
+        if (node.getDistance() == 0 || (previous != null && previous.getId().equals(node.getId()))) {
             return path;
         }
         if (previous == null) {
@@ -44,7 +45,7 @@ public class Graph {
         }
         while (previous.getDistance() != 0) {
             path.add(previous);
-            previous = node.getPrevious();
+            previous = previous.getPrevious();
         }
         return path;
     }
@@ -89,8 +90,10 @@ public class Graph {
     }
 
     public static boolean offerDistance(Node node2change, Node newPrevious, int newDistance) {
-        if (getCostToPath(node2change) == Integer.MAX_VALUE || getCostToPath(node2change) < getCostToPath(newPrevious) + newDistance) {
-            pq.add(node2change);
+        if (getCostToPath(node2change) == Integer.MAX_VALUE || getCostToPath(node2change) > getCostToPath(newPrevious) + newDistance) {
+            if (!node2change.isVisited) {
+                pq.add(node2change);
+            }
             return true;
         }
         return false;
