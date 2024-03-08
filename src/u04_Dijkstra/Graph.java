@@ -26,7 +26,7 @@ public class Graph {
      * Initializes an empty graph with no nodes.
      */
     public Graph() {
-        nodes = new ArrayList<Node>();
+        nodes = new ArrayList<>();
     }
 
     public static void main(String[] args) {
@@ -46,7 +46,7 @@ public class Graph {
     /**
      * A list of nodes in the graph.
      */
-    static List<Node> nodes = new ArrayList<Node>();
+    static List<Node> nodes = new ArrayList<>();
 
     /**
      * Returns a string representation of all paths in the graph. For each node, it displays
@@ -55,32 +55,32 @@ public class Graph {
      * @return a string representing all paths in the graph
      */
     public static String getAllPaths() {
-        String erg = "";
+        StringBuilder erg = new StringBuilder();
         for (Node node:
              nodes) {
             ArrayList<Node> path = getPathTo(node);
             if (path == null) {
-                erg += "no path available for "+node.getId()+" [totalDistance: ?] ";
+                erg.append("no path available for ").append(node.getId()).append(" [totalDistance: ?] ");
                 List<Edge> edges = getAplhabeticalEdgesList(node);
                 for (Edge neighbor : edges) {
-                    erg += neighbor.getNeighbor().getId() + ":" + neighbor.getDistance() +", ";
+                    erg.append(neighbor.getNeighbor().getId()).append(":").append(neighbor.getDistance()).append(", ");
                 }
-                erg = erg.substring(0,erg.length()-2);
+                erg = new StringBuilder(erg.substring(0, erg.length() - 2));
             }else {
-                erg += path.get(path.size() - 1).getId();
+                erg.append(path.get(path.size() - 1).getId());
                 if (path.size() == 1) {
-                    erg += ": is start node";
+                    erg.append(": is start node");
                 } else {
                     int pathsum = 0;
                     for (int i = path.size() - 2; i >= 0; i--) {
                         pathsum += path.get(i).getDistance();
-                        erg += " --(" + pathsum + ")-> " + path.get(i).getId();
+                        erg.append(" --(").append(pathsum).append(")-> ").append(path.get(i).getId());
                     }
                 }
             }
-            erg += "\n";
+            erg.append("\n");
         }
-        return erg;
+        return erg.toString();
     }
 
     /**
@@ -209,25 +209,25 @@ public class Graph {
 
     @Override
     public String toString() {
-        String erg = "";
+        StringBuilder erg = new StringBuilder();
         for (Node node:
                 nodes) {
             int cost = getCostToPath(node);
             ArrayList<Node> path = getPathTo(node);
             if ((path != null) && (path.size() == 1)) {
-                erg += node.getId() +"----> is start node ";
+                erg.append(node.getId()).append("----> is start node ");
             }else {
-                erg += node.getId() + " [totalDistance: " + (cost == Integer.MAX_VALUE ? "?" : cost) + "] ";
+                erg.append(node.getId()).append(" [totalDistance: ").append(cost == Integer.MAX_VALUE ? "?" : cost).append("] ");
             }
             List<Edge> edges = getAplhabeticalEdgesList(node);
             for (Edge neighbor : edges) {
-                erg += neighbor.getNeighbor().getId() + ":" + neighbor.getDistance() + ", ";
+                erg.append(neighbor.getNeighbor().getId()).append(":").append(neighbor.getDistance()).append(", ");
             }
-            erg = erg.substring(0, erg.length() - 2);
+            erg = new StringBuilder(erg.substring(0, erg.length() - 2));
 
-            erg+="\n";
+            erg.append("\n");
         }
-        return erg;
+        return erg.toString();
     }
 
     /**
@@ -239,12 +239,7 @@ public class Graph {
      */
     private static List<Edge> getAplhabeticalEdgesList(Node node) {
         List<Edge> edges = new ArrayList<>(node.getEdges());
-        Collections.sort(edges, new Comparator<Edge>() {
-            @Override
-            public int compare(Edge e1, Edge e2) {
-                return e1.getNeighbor().getId().compareTo(e2.getNeighbor().getId());
-            }
-        });
+        edges.sort(Comparator.comparing(e -> e.getNeighbor().getId()));
         return edges;
     }
 

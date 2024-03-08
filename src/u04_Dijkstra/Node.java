@@ -14,14 +14,14 @@ public class Node implements Comparable {
     /**
      * The unique identifier of the node. This ID is used to distinguish between different nodes in the graph.
      */
-    private String id;
+    private final String id;
 
     /**
      * A sorted set of edges connecting this node to its neighbors. The TreeSet ensures that the edges are
      * automatically sorted according to the natural ordering of the Edge class, which typically involves
      * comparing the distance or weight of the edges.
      */
-    private TreeSet<Edge> edges;
+    private final TreeSet<Edge> edges;
 
     /**
      * The distance from the start node to this node as calculated by Dijkstra's algorithm. It is initially
@@ -74,10 +74,10 @@ public class Node implements Comparable {
 
     @Override
     public String toString() {
-        String str_edges = "";
+        StringBuilder str_edges = new StringBuilder();
         for (Edge edge:
              edges) {
-            str_edges += edge.toString() +" ";
+            str_edges.append(edge.toString()).append(" ");
         }
         return "Node{" +
                 "id='" + id + '\'' + "edges=" + str_edges +

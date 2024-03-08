@@ -11,12 +11,12 @@ public class Edge implements Comparable<Edge> {
     /**
      * The distance or weight of this edge.
      */
-    private int distance;
+    private final int distance;
 
     /**
      * The neighbor node this edge connects to.
      */
-    private Node neighbor;
+    private final Node neighbor;
 
     /**
      * Constructs an edge with a specified distance to a neighbor node.
