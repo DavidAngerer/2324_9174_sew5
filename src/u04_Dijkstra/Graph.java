@@ -12,15 +12,15 @@ public class Graph {
 
     public static void main(String[] args) {
         Graph graph = new Graph();
-        graph.readGraphFromAdjacencyMatrixFile(Path.of("src/u04_Dijkstra/matrixfile.csv"));
-        graph.calcWithDijkstra("A");
-        System.out.println(graph.getAllPaths());
-        //System.out.println(graph);
+        readGraphFromAdjacencyMatrixFile(Path.of("src/u04_Dijkstra/matrixfile.csv"));
+        calcWithDijkstra("A");
+        System.out.println(getAllPaths());
+        System.out.println(graph);
     }
 
-    List<Node> nodes = new ArrayList<Node>();
+    static List<Node> nodes = new ArrayList<Node>();
 
-    public String getAllPaths() {
+    public static String getAllPaths() {
         String erg = "";
         for (Node node:
              nodes) {
@@ -32,7 +32,7 @@ public class Graph {
         return erg;
     }
 
-    private ArrayList<Node> getPathTo(Node node) {
+    private static ArrayList<Node> getPathTo(Node node) {
         ArrayList<Node> path = new ArrayList<>();
         path.add(node);
         Node previous = node.getPrevious();
@@ -49,7 +49,7 @@ public class Graph {
         return path;
     }
 
-    private int getCostToPath(Node node) {
+    private static int getCostToPath(Node node) {
         int cost = 0;
         ArrayList<Node> path = getPathTo(node);
         if (path == null) {
@@ -61,9 +61,9 @@ public class Graph {
         return cost;
     }
 
-    private PriorityQueue<Node> pq = new PriorityQueue<>(new NodeComparator());
+    private static PriorityQueue<Node> pq = new PriorityQueue<>(new NodeComparator());
 
-    public void readGraphFromAdjacencyMatrixFile(Path file) {
+    public static void readGraphFromAdjacencyMatrixFile(Path file) {
         try (BufferedReader reader = Files.newBufferedReader(file)) {
             List<String> lines = new ArrayList<>();
             String line;
@@ -77,10 +77,10 @@ public class Graph {
     }
 
 
-    public void calcWithDijkstra(String startNodeId){
+    public static void calcWithDijkstra(String startNodeId){
         Node startNode = getNodeWithChar(startNodeId);
         pq.add(startNode);
-        Node currentNode = startNode;
+        Node currentNode = pq.poll();
         startNode.setStartNode();
         while (currentNode != null) {
             currentNode.visit();
@@ -88,7 +88,7 @@ public class Graph {
         }
     }
 
-    public boolean offerDistance(Node node2change, Node newPrevious, int newDistance) {
+    public static boolean offerDistance(Node node2change, Node newPrevious, int newDistance) {
         if (getCostToPath(node2change) == Integer.MAX_VALUE || getCostToPath(node2change) < getCostToPath(newPrevious) + newDistance) {
             pq.add(node2change);
             return true;
@@ -104,7 +104,7 @@ public class Graph {
                 '}';
     }
 
-    private void getNodesFromLines(List<String> lines) {
+    private static void getNodesFromLines(List<String> lines) {
         int n = lines.size();
         String[] elements = lines.get(0).split(";");
         for (int i = 1; i < elements.length; i++) {
@@ -122,7 +122,7 @@ public class Graph {
         }
     }
 
-    private Node getNodeWithChar(String s) {
+    private static Node getNodeWithChar(String s) {
         for (Node node:
              nodes) {
             if (node.getId().equals(s)){
