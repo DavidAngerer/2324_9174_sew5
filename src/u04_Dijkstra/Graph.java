@@ -13,8 +13,13 @@ public class Graph {
     public static void main(String[] args) {
         Graph graph = new Graph();
         readGraphFromAdjacencyMatrixFile(Path.of("src/u04_Dijkstra/matrixfile.csv"));
-        calcWithDijkstra("A");
+        System.out.println(graph);
         System.out.println(getAllPaths());
+        calcWithDijkstra("A");
+        System.out.println("\nDjikstra executed\n");
+        System.out.println(graph);
+        System.out.println(getAllPaths());
+        calcWithDijkstra("D");
         System.out.println(graph);
     }
 
@@ -25,10 +30,25 @@ public class Graph {
         for (Node node:
              nodes) {
             ArrayList<Node> path = getPathTo(node);
-            for (int i = path.size()-1; i > 0; i--) {
-                erg += " --("+path.get(i).getDistance()+")-> "+path.get(i).getId();
+            if (path == null) {
+                erg += "no path available for "+node.getId()+" [totalDistance: ?] ";
+                for (Edge neighbor : node.getEdges()) {
+                    erg += neighbor.getNeighbor().getId() + ":" + neighbor.getDistance() +", ";
+                }
+                erg = erg.substring(0,erg.length()-2);
+            }else {
+                erg += path.get(path.size() - 1).getId();
+                if (path.size() == 1) {
+                    erg += ": is start node";
+                } else {
+                    int pathsum = 0;
+                    for (int i = path.size() - 2; i >= 0; i--) {
+                        pathsum += path.get(i).getDistance();
+                        erg += " --(" + pathsum + ")-> " + path.get(i).getId();
+                    }
+                }
             }
-            erg+="\n";
+            erg += "\n";
         }
         return erg;
     }
@@ -47,6 +67,7 @@ public class Graph {
             path.add(previous);
             previous = previous.getPrevious();
         }
+        path.add(previous);
         return path;
     }
 
@@ -79,6 +100,7 @@ public class Graph {
 
 
     public static void calcWithDijkstra(String startNodeId){
+        resetDjikstra();
         Node startNode = getNodeWithChar(startNodeId);
         pq.add(startNode);
         Node currentNode = pq.poll();
@@ -86,6 +108,14 @@ public class Graph {
         while (currentNode != null) {
             currentNode.visit();
             currentNode = pq.poll();
+        }
+    }
+
+    public static void resetDjikstra() {
+        for (Node node:
+             nodes) {
+            node.setPrevious(null);
+            node.setDistance(Integer.MAX_VALUE);
         }
     }
 
@@ -102,9 +132,23 @@ public class Graph {
 
     @Override
     public String toString() {
-        return "Graph{" +
-                "nodes=" + nodes +
-                '}';
+        String erg = "";
+        for (Node node:
+                nodes) {
+            int cost = getCostToPath(node);
+            ArrayList<Node> path = getPathTo(node);
+            if ((path != null) && (path.size() == 1)) {
+                erg += node.getId() +"----> is start node";
+            }else {
+                erg += node.getId() + " [totalDistance: "+(cost== Integer.MAX_VALUE ? "?":cost)+"] ";
+                for (Edge neighbor : node.getEdges()) {
+                    erg += neighbor.getNeighbor().getId() + ":" + neighbor.getDistance() + ", ";
+                }
+                erg = erg.substring(0, erg.length() - 2);
+            }
+            erg+="\n";
+        }
+        return erg;
     }
 
     private static void getNodesFromLines(List<String> lines) {
