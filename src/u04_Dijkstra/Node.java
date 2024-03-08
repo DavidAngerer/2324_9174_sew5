@@ -83,5 +83,9 @@ public class Node implements Comparable {
         return previous;
     }
 
-
+    public void resetNode() {
+        distance = Integer.MAX_VALUE;
+        isVisited = false;
+        previous = null;
+    }
 }

@@ -21,6 +21,7 @@ public class Graph {
         System.out.println(getAllPaths());
         calcWithDijkstra("D");
         System.out.println(graph);
+        System.out.println(getAllPaths());
     }
 
     static List<Node> nodes = new ArrayList<Node>();
@@ -114,8 +115,7 @@ public class Graph {
     public static void resetDjikstra() {
         for (Node node:
              nodes) {
-            node.setPrevious(null);
-            node.setDistance(Integer.MAX_VALUE);
+            node.resetNode();
         }
     }
 
