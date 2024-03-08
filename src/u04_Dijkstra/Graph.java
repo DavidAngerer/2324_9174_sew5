@@ -4,11 +4,13 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.PriorityQueue;
+import java.util.*;
 
 public class Graph {
+
+    public Graph() {
+        nodes = new ArrayList<Node>();
+    }
 
     public static void main(String[] args) {
         Graph graph = new Graph();
@@ -33,7 +35,8 @@ public class Graph {
             ArrayList<Node> path = getPathTo(node);
             if (path == null) {
                 erg += "no path available for "+node.getId()+" [totalDistance: ?] ";
-                for (Edge neighbor : node.getEdges()) {
+                List<Edge> edges = getAplhabeticalEdgesList(node);
+                for (Edge neighbor : edges) {
                     erg += neighbor.getNeighbor().getId() + ":" + neighbor.getDistance() +", ";
                 }
                 erg = erg.substring(0,erg.length()-2);
@@ -138,17 +141,30 @@ public class Graph {
             int cost = getCostToPath(node);
             ArrayList<Node> path = getPathTo(node);
             if ((path != null) && (path.size() == 1)) {
-                erg += node.getId() +"----> is start node";
+                erg += node.getId() +"----> is start node ";
             }else {
-                erg += node.getId() + " [totalDistance: "+(cost== Integer.MAX_VALUE ? "?":cost)+"] ";
-                for (Edge neighbor : node.getEdges()) {
-                    erg += neighbor.getNeighbor().getId() + ":" + neighbor.getDistance() + ", ";
-                }
-                erg = erg.substring(0, erg.length() - 2);
+                erg += node.getId() + " [totalDistance: " + (cost == Integer.MAX_VALUE ? "?" : cost) + "] ";
             }
+            List<Edge> edges = getAplhabeticalEdgesList(node);
+            for (Edge neighbor : edges) {
+                erg += neighbor.getNeighbor().getId() + ":" + neighbor.getDistance() + ", ";
+            }
+            erg = erg.substring(0, erg.length() - 2);
+
             erg+="\n";
         }
         return erg;
+    }
+
+    private static List<Edge> getAplhabeticalEdgesList(Node node) {
+        List<Edge> edges = new ArrayList<>(node.getEdges());
+        Collections.sort(edges, new Comparator<Edge>() {
+            @Override
+            public int compare(Edge e1, Edge e2) {
+                return e1.getNeighbor().getId().compareTo(e2.getNeighbor().getId());
+            }
+        });
+        return edges;
     }
 
     private static void getNodesFromLines(List<String> lines) {
