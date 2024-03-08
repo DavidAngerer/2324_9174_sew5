@@ -24,10 +24,18 @@ public class Edge implements Comparable<Edge> {
     @Override
     public int compareTo(Edge o) {
         if (this.distance > o.distance) {
-            return -1;
-        } else if (this.distance < o.distance){
             return 1;
+        } else if (this.distance < o.distance){
+            return -1;
         }
         return this.neighbor.getId().compareTo(o.neighbor.getId());
+    }
+
+    public Node getNeighbor() {
+        return neighbor;
+    }
+
+    public int getDistance() {
+        return distance;
     }
 }

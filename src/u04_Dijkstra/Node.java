@@ -6,7 +6,7 @@ public class Node implements Comparable {
     private String id;
     private TreeSet<Edge> edges;
     int distance = Integer.MAX_VALUE;
-    Node previous;
+    Node previous = null;
     boolean isVisited;
 
     public Node(String id) {
@@ -50,4 +50,38 @@ public class Node implements Comparable {
         }
         return this.getId().compareTo(((Node) o).getId());
     }
+
+    public TreeSet<Edge> getEdges() {
+        return edges;
+    }
+
+    public void setStartNode() {
+        distance = 0;
+        previous = this;
+    }
+
+    public void setDistance(int distance) {
+        this.distance = distance;
+    }
+
+    public void setPrevious(Node previous) {
+        this.previous = previous;
+    }
+
+    public void visit() {
+        isVisited = true;
+        for (Edge edge:
+             edges) {
+            if (Graph.offerDistance(edge.getNeighbor(),this,edge.getDistance())) {
+                edge.getNeighbor().setDistance(edge.getDistance());
+                edge.getNeighbor().setPrevious(edge.getNeighbor());
+            }
+        }
+    }
+
+    public Node getPrevious() {
+        return previous;
+    }
+
+
 }
