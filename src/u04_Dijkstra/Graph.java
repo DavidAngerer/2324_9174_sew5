@@ -152,7 +152,7 @@ public class Graph {
             }
             getNodesFromLines(lines);
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new IllegalArgumentException("Graph is wrongly formatted");
         }
     }
 
@@ -164,13 +164,12 @@ public class Graph {
      */
     public static void calcWithDijkstra(String startNodeId){
         resetDjikstra();
-        Node startNode = getNodeWithChar(startNodeId);
+        Node startNode = getNodeWithId(startNodeId);
         pq.add(startNode);
-        Node currentNode = pq.poll();
         startNode.setStartNode();
-        while (currentNode != null) {
+        Node currentNode;
+        while ((currentNode = pq.poll()) != null) {
             currentNode.visit();
-            currentNode = pq.poll();
         }
     }
 
@@ -198,6 +197,8 @@ public class Graph {
      */
     public static boolean offerDistance(Node node2change, Node newPrevious, int newDistance) {
         if (getCostToPath(node2change) == Integer.MAX_VALUE || getCostToPath(node2change) > getCostToPath(newPrevious) + newDistance) {
+            node2change.setDistance(newDistance);
+            node2change.setPrevious(newPrevious);
             if (!node2change.isVisited) {
                 pq.add(node2change);
             }
@@ -259,8 +260,8 @@ public class Graph {
             String[] values = lines.get(i).split(";");
             for (int j = 1; j < values.length; j++) {
                 if (!values[j].equals("")) {
-                    Node neighborNode = getNodeWithChar(""+((char) ('A' + j-1)));
-                    Node node = getNodeWithChar(""+((char) ('A' + i-1)));
+                    Node neighborNode = getNodeWithId(elements[j]);
+                    Node node = getNodeWithId(""+elements[i]);
                     node.addEdge(neighborNode, Integer.parseInt(values[j]));
                 }
             }
@@ -274,7 +275,7 @@ public class Graph {
      * @param s the ID of the node to find
      * @return the Node object with the specified ID, or null if no such node exists
      */
-    private static Node getNodeWithChar(String s) {
+    private static Node getNodeWithId(String s) {
         for (Node node:
              nodes) {
             if (node.getId().equals(s)){

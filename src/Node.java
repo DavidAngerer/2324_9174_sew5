@@ -2,7 +2,7 @@
  * @author David Angelo, 5CN
  */
 public class Node {
-    private boolean state = false;
+    private boolean state;
 
     /**
      * Gets the current state of the given Node

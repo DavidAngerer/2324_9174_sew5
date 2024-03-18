@@ -49,7 +49,7 @@ class GraphTest {
                 "D --(1)-> E\n" +
                 "D --(1)-> E --(2)-> F\n" +
                 "D --(2)-> G\n" +
-                "D --(2)-> G --(3)-> H\n",Graph.getAllPaths());
+                "D --(1)-> E --(2)-> F --(3)-> H\n",Graph.getAllPaths());
     }
 
     @Test
@@ -94,5 +94,39 @@ class GraphTest {
                 "F [totalDistance: 2] B:3, E:1, H:1\n" +
                 "G [totalDistance: 2] C:1, D:2, H:1\n" +
                 "H [totalDistance: 3] E:5, F:1, G:1\n", String.valueOf(graph));
+    }
+
+    @Test
+    void testReadBigCSV() {
+        Graph graph = new Graph();
+        //Graph.readGraphFromAdjacencyMatrixFile(Path.of("src/u04_Dijkstra/res/big.csv"));
+        //Graph.calcWithDijkstra("n0");
+    }
+
+    @Test
+    void testReadGraphWithNames() {
+        Graph graph = new Graph();
+        Graph.readGraphFromAdjacencyMatrixFile(Path.of("src/u04_Dijkstra/res/Graph_12_with_names.csv"));
+        Graph.calcWithDijkstra("Adonaäis");
+    }
+
+    @Test
+    void testReadGraphAtilH() {
+        Graph graph = new Graph();
+        Graph.readGraphFromAdjacencyMatrixFile(Path.of("src/u04_Dijkstra/res/Graph_A-H.csv"));
+        Graph.calcWithDijkstra("A");
+    }
+
+    @Test
+    void testReadGraphAtilT() {
+        Graph graph = new Graph();
+        Graph.readGraphFromAdjacencyMatrixFile(Path.of("src/u04_Dijkstra/res/Graph_A-H.csv"));
+        Graph.calcWithDijkstra("A");
+    }
+
+    @Test
+    void testReadGraphAtilHKaputt() {
+        Graph graph = new Graph();
+        assertThrows(IllegalArgumentException.class,() -> Graph.readGraphFromAdjacencyMatrixFile(Path.of("src/u04_Dijkstra/res/kaputt_Graph_A-H_a.csv")));
     }
 }

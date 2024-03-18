@@ -9,7 +9,7 @@ import java.util.TreeSet;
  * @author David Angelo
  * @date 08.03.2024
  */
-public class Node implements Comparable {
+public class Node implements Comparable<Node> {
 
     /**
      * The unique identifier of the node. This ID is used to distinguish between different nodes in the graph.
@@ -21,20 +21,20 @@ public class Node implements Comparable {
      * automatically sorted according to the natural ordering of the Edge class, which typically involves
      * comparing the distance or weight of the edges.
      */
-    private final TreeSet<Edge> edges;
+    private final TreeSet<Edge> edges = new TreeSet<>();
 
     /**
      * The distance from the start node to this node as calculated by Dijkstra's algorithm. It is initially
      * set to Integer.MAX_VALUE to indicate that the distance is infinite/uncomputed at the beginning of the algorithm.
      */
-    int distance = Integer.MAX_VALUE;
+    private int distance;
 
     /**
      * The predecessor node in the shortest path from the start node to this node as determined by Dijkstra's algorithm.
      * It is used to reconstruct the path after the algorithm completes. Initially null, indicating no predecessor has been
      * set yet.
      */
-    Node previous = null;
+    Node previous;
 
     /**
      * A flag indicating whether this node has been visited during the execution of Dijkstra's algorithm. Visited nodes
@@ -50,7 +50,7 @@ public class Node implements Comparable {
      */
     public Node(String id) {
         this.id = id;
-        edges = new TreeSet<>();
+        resetNode();
     }
 
     /**
@@ -94,16 +94,13 @@ public class Node implements Comparable {
     }
 
     @Override
-    public int compareTo(Object o) {
-        if (!(o instanceof Node)) {
-            throw new IllegalArgumentException("other object needs to be node");
-        }
-        if (this.distance > ((Node) o).getDistance()) {
+    public int compareTo(Node node) {
+        if (this.distance > node.getDistance()) {
             return -1;
-        } else if (this.distance < ((Node) o).getDistance()){
+        } else if (this.distance < node.getDistance()){
             return 1;
         }
-        return this.getId().compareTo(((Node) o).getId());
+        return this.getId().compareTo(node.getId());
     }
 
     /**
@@ -146,12 +143,12 @@ public class Node implements Comparable {
      */
     public void visit() {
         isVisited = true;
-        for (Edge edge:
-             edges) {
-            if (Graph.offerDistance(edge.getNeighbor(),this,edge.getDistance())) {
-                edge.getNeighbor().setDistance(edge.getDistance());
-                edge.getNeighbor().setPrevious(this);
-            }
+        for (Edge edge: edges) {
+            Graph.offerDistance(edge.getNeighbor(),this,edge.getDistance());
+//            if (Graph.offerDistance(edge.getNeighbor(),this,edge.getDistance())) {
+//                edge.getNeighbor().setDistance(edge.getDistance());
+//                edge.getNeighbor().setPrevious(this);
+//            }
         }
     }
 
