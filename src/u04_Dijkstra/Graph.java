@@ -117,7 +117,7 @@ public class Graph {
      * @param node the node for which to calculate the total cost of the path
      * @return the total cost of the path, or Integer.MAX_VALUE if no path exists
      */
-    private static int getCostToPath(Node node) {
+    public static int getCostToPath(Node node) {
         int cost = 0;
         ArrayList<Node> path = getPathTo(node);
         if (path == null) {
@@ -285,7 +285,7 @@ public class Graph {
      * @param s the ID of the node to find
      * @return the Node object with the specified ID, or null if no such node exists
      */
-    private static Node getNodeWithId(String s) {
+    public static Node getNodeWithId(String s) {
         for (Node node:
              nodes) {
             if (node.getId().equals(s)){
