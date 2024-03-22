@@ -125,8 +125,78 @@ class GraphTest {
     }
 
     @Test
-    void testReadGraphAtilHKaputt() {
+    void testReadGraphAtilHKaputtA() {
         Graph graph = new Graph();
         assertThrows(IllegalArgumentException.class,() -> Graph.readGraphFromAdjacencyMatrixFile(Path.of("src/u04_Dijkstra/res/kaputt_Graph_A-H_a.csv")));
+    }
+
+    @Test
+    void testReadGraphAtilHKaputtB() {
+        Graph graph = new Graph();
+        assertThrows(IllegalArgumentException.class,() -> Graph.readGraphFromAdjacencyMatrixFile(Path.of("src/u04_Dijkstra/res/kaputt_Graph_A-H_b.csv")));
+    }
+
+    @Test
+    void testReadGraphAtilHKaputtC() {
+        Graph graph = new Graph();
+        assertThrows(IllegalArgumentException.class,() -> Graph.readGraphFromAdjacencyMatrixFile(Path.of("src/u04_Dijkstra/res/kaputt_Graph_A-H_c.csv")));
+    }
+
+    @Test
+    void testReadGraphAtilHKaputtD() {
+        Graph graph = new Graph();
+        assertThrows(IllegalArgumentException.class,() -> Graph.readGraphFromAdjacencyMatrixFile(Path.of("src/u04_Dijkstra/res/kaputt_Graph_A-H_d.csv")));
+    }
+
+    @Test
+    void testReadGraphAtilHKaputtE() {
+        Graph graph = new Graph();
+        assertThrows(IllegalArgumentException.class,() -> Graph.readGraphFromAdjacencyMatrixFile(Path.of("src/u04_Dijkstra/res/kaputt_Graph_A-H_e.csv")));
+    }
+
+    @Test
+    void testReadGraphAtilHKaputtF() {
+        Graph graph = new Graph();
+        assertThrows(IllegalArgumentException.class,() -> Graph.readGraphFromAdjacencyMatrixFile(Path.of("src/u04_Dijkstra/res/kaputt_Graph_A-H_f.csv")));
+    }
+
+    @Test
+    void testToStringUnzusammenhaengernderGraph() {
+        Graph graph = new Graph();
+        Graph.readGraphFromAdjacencyMatrixFile(Path.of("src/u04_Dijkstra/res/unzusammenhaengend_Graph_A-M.csv"));
+        Graph.calcWithDijkstra("A");
+        assertEquals("A----> is start node B:1, C:3, D:1\n" +
+                "B [totalDistance: 1] A:1, E:3, F:3\n" +
+                "C [totalDistance: 2] A:3, D:1, G:1\n" +
+                "D [totalDistance: 1] A:1, C:1, E:1, G:2\n" +
+                "E [totalDistance: 2] B:3, D:1, F:1, H:5\n" +
+                "F [totalDistance: 3] B:3, E:1, H:1\n" +
+                "G [totalDistance: 3] C:1, D:2, H:1\n" +
+                "H [totalDistance: 4] E:5, F:1, G:1\n" +
+                "I [totalDistance: ?] J:1, L:3\n" +
+                "J [totalDistance: ?] I:1, K:4\n" +
+                "K [totalDistance: ?] J:4, M:1\n" +
+                "L [totalDistance: ?] I:3, M:2\n" +
+                "M [totalDistance: ?] K:1, L:2\n",String.valueOf(graph));
+    }
+
+    @Test
+    void testAllPathsUnzusammenhaengernderGraph() {
+        Graph graph = new Graph();
+        Graph.readGraphFromAdjacencyMatrixFile(Path.of("src/u04_Dijkstra/res/unzusammenhaengend_Graph_A-M.csv"));
+        Graph.calcWithDijkstra("A");
+        assertEquals("A: is start node\n" +
+                "A --(1)-> B\n" +
+                "A --(1)-> D --(2)-> C\n" +
+                "A --(1)-> D\n" +
+                "A --(1)-> D --(2)-> E\n" +
+                "A --(1)-> D --(2)-> E --(3)-> F\n" +
+                "A --(1)-> D --(3)-> G\n" +
+                "A --(1)-> D --(2)-> E --(3)-> F --(4)-> H\n" +
+                "no path available for I [totalDistance: ?] J:1, L:3\n" +
+                "no path available for J [totalDistance: ?] I:1, K:4\n" +
+                "no path available for K [totalDistance: ?] J:4, M:1\n" +
+                "no path available for L [totalDistance: ?] I:3, M:2\n" +
+                "no path available for M [totalDistance: ?] K:1, L:2\n", Graph.getAllPaths());
     }
 }

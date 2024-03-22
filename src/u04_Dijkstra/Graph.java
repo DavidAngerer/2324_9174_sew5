@@ -256,12 +256,22 @@ public class Graph {
         for (int i = 1; i < elements.length; i++) {
             nodes.add(new Node(elements[i]));
         }
+        if (lines.size() != elements.length) {
+            throw new IllegalArgumentException("the rows and the columns need to be the same size");
+        }
         for (int i = 1; i < n; i++) {
             String[] values = lines.get(i).split(";");
+            int count = (lines.get(i).length() - lines.get(i).replace(";", "").length());
+            if (count != elements.length-1) {
+                throw new IllegalArgumentException("every row needs the same amount of colums");
+            }
             for (int j = 1; j < values.length; j++) {
                 if (!values[j].equals("")) {
                     Node neighborNode = getNodeWithId(elements[j]);
                     Node node = getNodeWithId(""+elements[i]);
+                    if ((node == null) || (neighborNode == null) || !node.getId().equals(values[0])) {
+                        throw new IllegalArgumentException("The Graph is not a valid Graph");
+                    }
                     node.addEdge(neighborNode, Integer.parseInt(values[j]));
                 }
             }
