@@ -71,10 +71,8 @@ public class Graph {
                 if (path.size() == 1) {
                     erg.append(": is start node");
                 } else {
-                    int pathsum = 0;
                     for (int i = path.size() - 2; i >= 0; i--) {
-                        pathsum += path.get(i).getDistance();
-                        erg.append(" --(").append(pathsum).append(")-> ").append(path.get(i).getId());
+                        erg.append(" --(").append(path.get(i).getDistance()).append(")-> ").append(path.get(i).getId());
                     }
                 }
             }
@@ -107,26 +105,6 @@ public class Graph {
         }
         path.add(previous);
         return path;
-    }
-
-    /**
-     * Calculates the total cost to reach a specified node from the start node.
-     * This method utilizes {@link #getPathTo(Node)} to reconstruct the path and then sums up the distances
-     * of each step in the path to compute the total cost.
-     *
-     * @param node the node for which to calculate the total cost of the path
-     * @return the total cost of the path, or Integer.MAX_VALUE if no path exists
-     */
-    public static int getCostToPath(Node node) {
-        int cost = 0;
-        ArrayList<Node> path = getPathTo(node);
-        if (path == null) {
-            return Integer.MAX_VALUE;
-        }
-        for (Node element : path){
-            cost+=element.getDistance();
-        }
-        return cost;
     }
 
     /**
@@ -196,8 +174,8 @@ public class Graph {
      * @return true if the distance was updated (indicating a shorter path was found), false otherwise
      */
     public static boolean offerDistance(Node node2change, Node newPrevious, int newDistance) {
-        if (getCostToPath(node2change) == Integer.MAX_VALUE || getCostToPath(node2change) > getCostToPath(newPrevious) + newDistance) {
-            node2change.setDistance(newDistance);
+        if (node2change.getDistance() == Integer.MAX_VALUE || node2change.getDistance() > newPrevious.getDistance() + newDistance) {
+            node2change.setDistance(newPrevious.getDistance()+newDistance);
             node2change.setPrevious(newPrevious);
             if (!node2change.isVisited) {
                 pq.add(node2change);
@@ -213,7 +191,7 @@ public class Graph {
         StringBuilder erg = new StringBuilder();
         for (Node node:
                 nodes) {
-            int cost = getCostToPath(node);
+            int cost = node.getDistance();
             ArrayList<Node> path = getPathTo(node);
             if ((path != null) && (path.size() == 1)) {
                 erg.append(node.getId()).append("----> is start node ");

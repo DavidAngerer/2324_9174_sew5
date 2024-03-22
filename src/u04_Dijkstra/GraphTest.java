@@ -101,7 +101,7 @@ class GraphTest {
         Graph graph = new Graph();
         Graph.readGraphFromAdjacencyMatrixFile(Path.of("src/u04_Dijkstra/res/big.csv"));
         Graph.calcWithDijkstra("n0");
-        assertEquals(5,Graph.getCostToPath(Graph.getNodeWithId("n345")));
+        assertEquals(4,Graph.getNodeWithId("n345").getDistance());
     }
 
     @Test
@@ -109,7 +109,7 @@ class GraphTest {
         Graph graph = new Graph();
         Graph.readGraphFromAdjacencyMatrixFile(Path.of("src/u04_Dijkstra/res/Graph_12_with_names.csv"));
         Graph.calcWithDijkstra("Adonaäis");
-        assertEquals(4,Graph.getCostToPath(Graph.getNodeWithId("Ledagrin")));
+        assertEquals(4,Graph.getNodeWithId("Ledagrin").getDistance());
     }
 
     @Test
